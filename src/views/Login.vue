@@ -20,13 +20,13 @@
       </el-form>
     </div>
 
-    <el-dialog v-model="passwordVis" title="忘记密码" :close-on-click-modal="false">
-      <el-form :model="passwordForm" ref="rulePasswordFormRef" :rules="passwordRules" status-icon label-width="100px">
+    <el-dialog v-model="passwordVis" title="忘记密码" :close-on-click-modal="false" style="width: 500px; padding: 0 20px">
+      <el-form :model="passwordForm" ref="rulePasswordFormRef" :rules="passwordRules" status-icon label-width="70px">
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="passwordForm.email" autocomplete="off" />
         </el-form-item>
         <el-form-item label="验证码" prop="emailCode">
-          <div style="display: flex">
+          <div style="display: flex; width: 100%">
             <el-input style="flex: 1" v-model="passwordForm.emailCode" clearable></el-input>
             <el-button style="width: 120px; margin-left: 5px" @click="sendEmail" :disabled="time > 0">点击发送<span v-if="time">（{{ time }}）</span></el-button>
           </div>
@@ -43,8 +43,7 @@
 </template>
 
 <script setup>
-import {reactive, ref} from "vue"
-// import { FormInstance, FormRules } from 'element-plus'
+import {nextTick, reactive, ref} from "vue"
 import { User, Lock } from '@element-plus/icons-vue'
 import router from "@/router";
 import request from "@/utils/request";
@@ -129,11 +128,13 @@ const sendEmail = () => {
   })
 }
 
+// 点击忘记密码触发
 const handleResetPassword = () => {
   passwordVis.value = true
-  if (rulePasswordFormRef) {
-    rulePasswordFormRef.resetFields()
-  }
+  // 触发表单重置
+  nextTick(() => {   // 下个时钟触发
+    rulePasswordFormRef.value.resetFields()
+  })
 }
 
 // 调用新接口重置密码
