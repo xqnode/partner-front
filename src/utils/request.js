@@ -2,6 +2,7 @@ import { ElMessage } from 'element-plus'
 import router from '../router'
 import config from "/config";
 import axios from "axios";
+import { useUserStore } from "@/stores/user";
 
 const request = axios.create({
     baseURL: `http://${config.serverUrl}`,
@@ -13,7 +14,8 @@ const request = axios.create({
 // 比如统一加token，对请求参数统一加密
 request.interceptors.request.use(config => {
     config.headers['Content-Type'] = 'application/json;charset=utf-8';
-    // config.headers['token'] = user.token;  // 设置请求头
+    const token = useUserStore().loginInfo.token
+    config.headers['Authorization'] = 'Bearer ' + token;  // 设置请求头
     return config
 }, error => {
     return Promise.reject(error)
@@ -34,7 +36,7 @@ request.interceptors.response.use(
         }
         // 当权限验证不通过的时候给出提示
         if (res.code === '401') {
-            ElMessage.error('res.msg');
+            ElMessage.error(res.msg);
             router.push("/login")
         }
         return res;

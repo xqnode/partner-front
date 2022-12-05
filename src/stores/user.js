@@ -2,11 +2,11 @@ import { defineStore } from 'pinia'   // 导入 defineStore
 
 export const useUserStore = defineStore('user', {
     state: () => ({
-        user: {}
+        loginInfo: {}   // {  user: {}, token: '' }
     }),
     actions: {
-        setUser(user) {
-            this.user = user
+        setLoginInfo(loginInfo) {
+            this.loginInfo = loginInfo
         }
     },
     // 开启数据持久化

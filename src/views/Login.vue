@@ -85,7 +85,7 @@ const login = () => {
         console.log(res)
         if (res.code === '200') {
          //   store.$patch({user: res.data})   // res.data 是后台返回的用户数据，存储到缓存里面
-          store.setUser(res.data)
+          store.setLoginInfo(res.data)
           ElMessage.success('登录成功')
           router.push('/')
         } else {
@@ -96,13 +96,7 @@ const login = () => {
   })
 }
 
-// 发送邮件
-const sendEmail = () => {
-  const reg = /^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/
-  if(!reg.test(passwordForm.email)) {  // test可以校验你的输入值
-    ElMessage.warning("请输入合法的邮箱")
-    return
-  }
+const times = () => {
   // 清空定时器
   if (interval.value >= 0) {
     clearInterval(interval.value)
@@ -113,6 +107,15 @@ const sendEmail = () => {
       time.value --
     }
   }, 1000)
+}
+
+// 发送邮件
+const sendEmail = () => {
+  const reg = /^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/
+  if(!reg.test(passwordForm.email)) {  // test可以校验你的输入值
+    ElMessage.warning("请输入合法的邮箱")
+    return
+  }
 
   request.get("/email", {
     params: {
@@ -121,6 +124,7 @@ const sendEmail = () => {
     }
   }).then(res => {
     if (res.code === '200') {
+      times()  // 倒计时
       ElMessage.success('发送成功，有效期5分钟')
     } else {
       ElMessage.error(res.msg)
