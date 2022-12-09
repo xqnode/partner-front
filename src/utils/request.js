@@ -6,7 +6,7 @@ import { useUserStore } from "@/stores/user";
 
 const request = axios.create({
     baseURL: `http://${config.serverUrl}`,
-    timeout: 5000
+    timeout: 5000  // 后台接口超时时间设置
 })
 
 // request 拦截器
